@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Aura Ring — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root {
+  --gold: #e8924a;
+  --gold-light: #f5c07a;
+  --gold-glow: rgba(232,146,74,0.6);
+  --blush: #f2c4b8;
+  --sky-pink: #f5d5cc;
+  --cloud1: #f0c8be;
+  --cloud2: #e8b8b0;
+  --dusk: #c07888;
+  --glass: rgba(255,255,255,0.18);
+  --glass-border: rgba(255,255,255,0.35);
+  --text-dark: #3a2828;
+  --text-mid: rgba(60,40,40,0.65);
+  --text-light: rgba(60,40,40,0.4);
+  --font: 'Outfit', sans-serif;
+}
+
+html,body {
+  width:100%; height:100%; overflow:hidden;
+  font-family: var(--font);
+  user-select:none;
+}
+
+/* ─── BACKGROUND ─── */
+.bg {
+  position:fixed; inset:0;
+  background: linear-gradient(170deg,
+    #f7d0c4 0%,
+    #f0beb0 18%,
+    #e8a898 35%,
+    #d99090 50%,
+    #cc8888 65%,
+    #c07888 80%,
+    #b87090 100%
+  );
+  overflow:hidden;
+}
+
+/* Cloud layers */
+.cloud {
+  position:absolute;
+  border-radius:50%;
+  filter:blur(55px);
+  animation:cloudDrift linear infinite;
+}
+.c1{width:700px;height:340px;background:rgba(255,220,200,0.55);top:55%;left:-10%;animation-duration:28s;animation-delay:0s}
+.c2{width:500px;height:260px;background:rgba(255,200,185,0.45);top:62%;left:30%;animation-duration:22s;animation-delay:-8s}
+.c3{width:620px;height:300px;background:rgba(255,225,210,0.5);top:68%;right:-5%;animation-duration:32s;animation-delay:-14s}
+.c4{width:400px;height:200px;background:rgba(240,180,170,0.4);top:75%;left:55%;animation-duration:18s;animation-delay:-5s}
+.c5{width:350px;height:180px;background:rgba(255,210,190,0.35);top:50%;left:15%;animation-duration:26s;animation-delay:-18s}
+.c6{width:550px;height:250px;background:rgba(230,160,150,0.3);top:40%;left:40%;animation-duration:35s;animation-delay:-22s}
+
+/* Lighter atmospheric clouds on top */
+.c7{width:900px;height:200px;background:rgba(255,235,225,0.25);top:30%;left:-20%;animation-duration:40s;animation-delay:-10s;filter:blur(70px)}
+.c8{width:700px;height:180px;background:rgba(255,235,225,0.2);top:20%;right:-10%;animation-duration:45s;animation-delay:-25s;filter:blur(70px)}
+
+@keyframes cloudDrift {
+  0%{transform:translateX(0) translateY(0) scaleX(1)}
+  25%{transform:translateX(40px) translateY(-20px) scaleX(1.05)}
+  50%{transform:translateX(80px) translateY(-10px) scaleX(1)}
+  75%{transform:translateX(40px) translateY(10px) scaleX(0.97)}
+  100%{transform:translateX(0) translateY(0) scaleX(1)}
+}
+
+/* Ambient light blobs */
+.amb {position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none}
+.amb1{width:500px;height:500px;background:rgba(240,160,80,0.18);top:10%;left:35%;animation:ambPulse 8s ease-in-out infinite}
+.amb2{width:400px;height:400px;background:rgba(200,120,140,0.15);bottom:5%;right:10%;animation:ambPulse 10s ease-in-out 2s infinite}
+@keyframes ambPulse{0%,100%{transform:scale(1);opacity:0.8}50%{transform:scale(1.2);opacity:1}}
+
+/* ─── LAYOUT ─── */
+.app {
+  position:relative; z-index:10;
+  width:100%; height:100%;
+  display:grid;
+  grid-template-rows: 52px 1fr 60px;
+  padding:0;
+}
+
+/* ─── TOP NAV ─── */
+.topnav {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 28px;
+  background:rgba(255,255,255,0.1);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(255,255,255,0.25);
+}
+.logo {
+  display:flex; align-items:center; gap:8px;
+  font-size:0.9rem; font-weight:600; color:var(--text-dark);
+}
+.logo-icon {
+  width:28px; height:28px; border-radius:50%;
+  background:linear-gradient(135deg,var(--gold),#d4602a);
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 0 12px var(--gold-glow);
+}
+.logo-icon svg{width:14px;height:14px;fill:white}
+
+.nav-tabs {
+  display:flex; gap:4px;
+  background:rgba(255,255,255,0.2);
+  border:1px solid rgba(255,255,255,0.35);
+  border-radius:100px; padding:4px;
+}
+.tab {
+  padding:4px 18px; border-radius:100px;
+  font-size:0.78rem; font-weight:500;
+  color:rgba(60,40,40,0.55); cursor:pointer;
+  transition:all .2s; border:none; background:none;
+}
+.tab.active {
+  background:rgba(255,255,255,0.75);
+  color:var(--text-dark);
+  box-shadow:0 1px 6px rgba(0,0,0,0.1);
+}
+
+.nav-right {display:flex; align-items:center; gap:12px}
+.icon-btn {
+  width:32px; height:32px; border-radius:50%;
+  background:rgba(255,255,255,0.22);
+  border:1px solid rgba(255,255,255,0.38);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; transition:all .2s;
+}
+.icon-btn:hover{background:rgba(255,255,255,0.4)}
+.icon-btn svg{width:14px;height:14px;stroke:var(--text-dark);fill:none;stroke-width:2}
+
+/* ─── MAIN AREA ─── */
+.main {
+  display:grid;
+  grid-template-columns: 260px 1fr 280px;
+  gap:0;
+  padding:20px 24px;
+  position:relative;
+  overflow:hidden;
+}
+
+/* ─── LEFT PANEL ─── */
+.left-panel {
+  display:flex; flex-direction:column; gap:14px;
+  padding-right:16px;
+}
+
+/* Glass Card Base */
+.glass-card {
+  background:rgba(255,255,255,0.22);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,0.42);
+  border-radius:18px;
+  padding:14px 16px;
+  box-shadow:0 4px 20px rgba(180,100,80,0.1), inset 0 1px 0 rgba(255,255,255,0.5);
+  animation:cardEntry 0.7s ease both;
+}
+
+@keyframes cardEntry{
+  from{opacity:0;transform:translateY(16px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.card-label {
+  font-size:0.68rem; font-weight:500;
+  letter-spacing:0.08em; text-transform:uppercase;
+  color:var(--text-light); margin-bottom:3px;
+}
+.card-title {
+  font-size:0.85rem; font-weight:400; color:var(--text-dark);
+  line-height:1.4;
+}
+.card-title strong{font-weight:600}
+
+/* Question card */
+.q-card {animation-delay:0.1s}
+.q-options{display:flex;gap:8px;margin-top:10px}
+.q-opt {
+  flex:1; padding:6px 8px; border-radius:10px;
+  background:rgba(255,255,255,0.35);
+  border:1px solid rgba(255,255,255,0.5);
+  font-size:0.72rem; font-weight:500; color:var(--text-dark);
+  cursor:pointer; text-align:center; transition:all .2s;
+}
+.q-opt:hover{background:rgba(255,255,255,0.6)}
+.q-opt.selected{background:rgba(232,146,74,0.3);border-color:var(--gold)}
+
+/* Running card */
+.run-card{animation-delay:0.2s}
+.run-meta{display:flex;align-items:center;justify-content:space-between;margin-top:6px}
+.run-dist{font-size:1.6rem;font-weight:700;color:var(--text-dark);letter-spacing:-0.02em}
+.run-unit{font-size:0.75rem;color:var(--text-mid);margin-top:4px}
+.run-map {
+  width:100%; height:60px; margin-top:10px; border-radius:10px;
+  background:rgba(255,255,255,0.25);
+  position:relative; overflow:hidden;
+}
+.run-path {
+  position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+}
+
+/* Heart rate card */
+.hr-card{animation-delay:0.35s}
+.hr-row{display:flex;align-items:flex-end;justify-content:space-between;margin-top:8px}
+.hr-num{font-size:2rem;font-weight:700;color:var(--text-dark);letter-spacing:-0.04em}
+.hr-unit{font-size:0.75rem;color:var(--text-mid)}
+.hr-bars{display:flex;align-items:flex-end;gap:3px;height:36px}
+.bar{width:5px;border-radius:3px;background:var(--gold);animation:barPulse 1.5s ease-in-out infinite alternate}
+@keyframes barPulse{from{opacity:0.4}to{opacity:1}}
+
+/* Calories card */
+.cal-card{animation-delay:0.45s}
+.cal-val{font-size:1.8rem;font-weight:700;color:var(--text-dark);letter-spacing:-0.03em;margin-top:4px}
+
+/* ─── CENTER ─── */
+.center-area {
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  position:relative;
+}
+
+/* Ring container */
+.ring-scene {
+  perspective:1200px;
+  display:flex; align-items:center; justify-content:center;
+  position:relative;
+  animation:sceneFadeIn 1s ease both;
+}
+@keyframes sceneFadeIn{from{opacity:0;transform:scale(0.85)}to{opacity:1;transform:scale(1)}}
+
+/* Glow behind ring */
+.ring-glow-bg {
+  position:absolute;
+  width:320px; height:320px; border-radius:50%;
+  background:radial-gradient(circle, rgba(232,146,74,0.45) 0%, rgba(232,100,60,0.2) 40%, transparent 70%);
+  filter:blur(30px);
+  animation:glowPulse 4s ease-in-out infinite alternate;
+}
+@keyframes glowPulse{
+  from{transform:scale(0.9);opacity:0.7}
+  to{transform:scale(1.15);opacity:1}
+}
+
+/* The ring itself */
+.ring-wrap {
+  position:relative; z-index:2;
+  animation:ringFloat 5s ease-in-out infinite;
+}
+@keyframes ringFloat{
+  0%,100%{transform:translateY(0) rotateZ(0deg)}
+  50%{transform:translateY(-18px) rotateZ(1deg)}
+}
+
+.ring-3d {
+  width:270px; height:270px;
+  border-radius:50%;
+  /* Ring body = border, hole = transparent center */
+  border: 62px solid transparent;
+  background:
+    /* Center – show through hole (slightly glowing) */
+    radial-gradient(circle at 45% 42%,
+      rgba(240,160,80,0.12) 0%,
+      rgba(200,100,60,0.05) 50%,
+      transparent 100%
+    ) content-box,
+    /* Ring body – silver/gray metallic */
+    conic-gradient(from 140deg,
+      #e8e0da 0deg,
+      #ccc5be 50deg,
+      #b8b0a8 100deg,
+      #a8a099 160deg,
+      #b5aea6 200deg,
+      #cdc6be 260deg,
+      #dedad4 310deg,
+      #e8e0da 360deg
+    ) border-box;
+
+  transform: rotateX(-32deg) rotateY(14deg);
+  box-shadow:
+    /* Bottom float shadow */
+    0 50px 80px rgba(160,80,60,0.35),
+    0 20px 40px rgba(180,100,60,0.25),
+    /* Ring body 3D depth */
+    inset 0 -18px 28px rgba(0,0,0,0.22),
+    inset 0 10px 18px rgba(255,255,255,0.22),
+    /* Outer edge glow warm */
+    0 0 60px rgba(220,130,70,0.25);
+
+  transition:transform 0.1s ease;
+}
+
+/* Inner golden glow edge */
+.ring-inner-glow {
+  position:absolute;
+  top:50%; left:50%;
+  transform: translate(-50%,-50%) rotateX(-32deg) rotateY(14deg);
+  width:270px; height:270px;
+  border-radius:50%;
+  pointer-events:none;
+  /* The golden inner ring edge */
+  border: 62px solid transparent;
+  background: transparent content-box,
+    linear-gradient(135deg,
+      #f5c06a,
+      #e8903a,
+      #f0a850,
+      #d47020,
+      #f5c06a
+    ) border-box;
+  opacity:0.55;
+  animation:innerGlowPulse 3s ease-in-out infinite alternate;
+  mix-blend-mode:screen;
+}
+@keyframes innerGlowPulse{
+  from{opacity:0.45;filter:blur(1px)}
+  to{opacity:0.7;filter:blur(0px)}
+}
+
+/* Inner gold glow light bleeding into hole */
+.ring-hole-glow {
+  position:absolute;
+  top:50%; left:50%;
+  width:150px; height:100px;
+  border-radius:50%;
+  background:radial-gradient(circle,
+    rgba(240,160,70,0.55) 0%,
+    rgba(240,160,70,0.2) 50%,
+    transparent 80%
+  );
+  transform:translate(-50%,-60%) rotateX(-32deg);
+  filter:blur(8px);
+  animation:holePulse 3s ease-in-out infinite alternate;
+  pointer-events:none;
+  z-index:3;
+}
+@keyframes holePulse{
+  from{opacity:0.7;transform:translate(-50%,-60%) rotateX(-32deg) scale(0.9)}
+  to{opacity:1;transform:translate(-50%,-55%) rotateX(-32deg) scale(1.1)}
+}
+
+/* Ring shadow on clouds below */
+.ring-shadow {
+  position:absolute;
+  bottom:-40px; left:50%; transform:translateX(-50%);
+  width:200px; height:40px; border-radius:50%;
+  background:rgba(140,60,40,0.2);
+  filter:blur(20px);
+  animation:shadowFloat 5s ease-in-out infinite;
+}
+@keyframes shadowFloat{
+  0%,100%{transform:translateX(-50%) scaleX(1);opacity:0.6}
+  50%{transform:translateX(-50%) scaleX(0.8);opacity:0.3}
+}
+
+/* ─── RIGHT PANEL ─── */
+.right-panel {
+  display:flex; flex-direction:column; gap:14px;
+  padding-left:16px;
+}
+
+/* Profile avatar circle */
+.profile-ring-wrap {
+  display:flex; justify-content:center;
+  animation:cardEntry 0.8s ease 0.3s both;
+}
+.profile-outer {
+  width:150px; height:150px; border-radius:50%;
+  position:relative;
+  display:flex; align-items:center; justify-content:center;
+}
+/* Concentric glow rings */
+.profile-outer::before {
+  content:'';
+  position:absolute; inset:-14px; border-radius:50%;
+  background:conic-gradient(from 0deg,
+    rgba(240,180,80,0.9) 0deg,
+    rgba(220,130,50,0.4) 90deg,
+    rgba(240,180,80,0.1) 180deg,
+    rgba(240,180,80,0.9) 270deg,
+    rgba(240,180,80,0.9) 360deg
+  );
+  animation:ringRotateAnim 6s linear infinite;
+  filter:blur(1px);
+}
+@keyframes ringRotateAnim{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.profile-outer::after {
+  content:'';
+  position:absolute; inset:-20px; border-radius:50%;
+  background:conic-gradient(from 180deg,
+    rgba(240,150,60,0.35),
+    transparent 40%,
+    rgba(240,150,60,0.35) 80%,
+    transparent
+  );
+  animation:ringRotateAnim 10s linear infinite reverse;
+  filter:blur(3px);
+}
+.profile-circle {
+  width:140px; height:140px; border-radius:50%;
+  overflow:hidden; position:relative; z-index:2;
+  border:3px solid rgba(255,255,255,0.5);
+  box-shadow:0 0 30px rgba(220,130,60,0.5);
+  background:linear-gradient(135deg,#2a2030,#1a1520);
+  display:flex; align-items:center; justify-content:center;
+}
+.profile-silhouette {
+  width:100%; height:100%;
+  background:linear-gradient(160deg,#3a3048 30%,#221828 100%);
+  position:relative; overflow:hidden;
+}
+/* Stylized silhouette shape */
+.profile-silhouette::before {
+  content:'';
+  position:absolute;
+  bottom:-5px; left:50%; transform:translateX(-50%);
+  width:75px; height:110px;
+  background:linear-gradient(180deg,#4a3858 0%,#2a2035 100%);
+  border-radius:50% 50% 0 0 / 60% 60% 0 0;
+}
+.profile-silhouette::after {
+  content:'';
+  position:absolute;
+  bottom:32px; left:50%; transform:translateX(-50%);
+  width:46px; height:52px;
+  background:linear-gradient(180deg,#5a4870,#3a3058);
+  border-radius:50% 50% 48% 52% / 60% 60% 40% 40%;
+}
+/* Headband line */
+.headband {
+  position:absolute;
+  top:48px; left:50%; transform:translateX(-50%);
+  width:50px; height:5px; border-radius:3px;
+  background:rgba(180,150,220,0.6);
+  z-index:3;
+}
+.headband::before {
+  content:'';
+  position:absolute; right:-8px; top:-3px;
+  width:10px; height:10px;
+  background:rgba(200,170,240,0.7);
+  border-radius:50%;
+}
+/* Profile glow beacon */
+.profile-beacon {
+  position:absolute; top:12px; right:18px;
+  width:10px; height:10px; border-radius:50%;
+  background:#6dff8a;
+  z-index:5;
+  box-shadow:0 0 0 3px rgba(109,255,138,0.25);
+  animation:beaconPulse 2s ease infinite;
+}
+@keyframes beaconPulse{
+  0%,100%{box-shadow:0 0 0 3px rgba(109,255,138,0.25)}
+  50%{box-shadow:0 0 0 8px rgba(109,255,138,0.1)}
+}
+
+/* Stats card right */
+.stats-card {animation-delay:0.4s}
+.stats-row {
+  display:grid; grid-template-columns:1fr 1fr 1fr;
+  gap:8px; margin-top:8px;
+}
+.stat-item {text-align:center}
+.stat-v {font-size:1.1rem;font-weight:700;color:var(--text-dark);letter-spacing:-0.02em}
+.stat-l {font-size:0.65rem;color:var(--text-light);margin-top:1px}
+
+/* Progress arc */
+.arc-card {animation-delay:0.5s}
+.arc-wrap {
+  display:flex; align-items:center; justify-content:center;
+  padding:8px 0;
+}
+
+/* Mini chart card */
+.mini-chart-card {animation-delay:0.6s}
+.chart-row {
+  display:flex; align-items:flex-end; gap:4px;
+  height:44px; margin-top:10px;
+}
+.chart-col {
+  flex:1; border-radius:4px 4px 0 0;
+  background:linear-gradient(to top, rgba(232,146,74,0.8), rgba(245,192,122,0.4));
+  animation:chartGrow 1s ease both;
+}
+@keyframes chartGrow{from{height:0!important}to{height:var(--h)}}
+.chart-col.active {
+  background:linear-gradient(to top, var(--gold), var(--gold-light));
+  box-shadow:0 -4px 12px rgba(232,146,74,0.4);
+}
+
+/* Journey/Stats/Share buttons */
+.action-btns {
+  display:flex; gap:8px; margin-top:auto;
+  animation:cardEntry 0.7s ease 0.7s both;
+}
+.action-btn {
+  flex:1; padding:8px 0; border-radius:12px;
+  background:rgba(255,255,255,0.25);
+  border:1px solid rgba(255,255,255,0.45);
+  font-size:0.72rem; font-weight:500; color:var(--text-dark);
+  cursor:pointer; text-align:center; transition:all .2s;
+}
+.action-btn:hover{background:rgba(255,255,255,0.5)}
+.action-btn.primary {
+  background:rgba(232,146,74,0.3);
+  border-color:rgba(232,146,74,0.5);
+  color:#a04820;
+}
+
+/* ─── BOTTOM NAV ─── */
+.bottom-nav {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 40px;
+  background:rgba(255,255,255,0.15);
+  backdrop-filter:blur(20px);
+  border-top:1px solid rgba(255,255,255,0.3);
+}
+
+.schedule-btn {
+  font-size:0.78rem; font-weight:500;
+  color:var(--text-mid); cursor:pointer;
+  display:flex; align-items:center; gap:6px;
+}
+.schedule-btn svg{width:14px;height:14px;stroke:var(--text-mid);fill:none;stroke-width:2}
+
+.nav-icons {
+  display:flex; gap:6px;
+}
+.nav-icon {
+  width:40px; height:40px; border-radius:50%;
+  background:rgba(255,255,255,0.18);
+  border:1px solid rgba(255,255,255,0.3);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; transition:all .25s;
+}
+.nav-icon:hover{background:rgba(255,255,255,0.4);transform:translateY(-2px)}
+.nav-icon.active {
+  background:rgba(255,255,255,0.5);
+  box-shadow:0 4px 16px rgba(200,130,80,0.25);
+}
+.nav-icon svg{width:16px;height:16px;stroke:var(--text-dark);fill:none;stroke-width:1.8}
+
+.right-btns {
+  display:flex; gap:8px; align-items:center;
+}
+.r-btn {
+  padding:6px 16px; border-radius:10px;
+  font-size:0.75rem; font-weight:500;
+  background:rgba(255,255,255,0.22);
+  border:1px solid rgba(255,255,255,0.38);
+  color:var(--text-mid); cursor:pointer; transition:all .2s;
+}
+.r-btn:hover{background:rgba(255,255,255,0.45);color:var(--text-dark)}
+.r-btn.active{background:rgba(232,146,74,0.3);border-color:var(--gold);color:#a04820}
+
+/* ─── SVG RUN MAP ─── */
+.run-svg { width:100%; height:100%; }
+
+/* ─── ARC SVG ─── */
+.arc-svg { overflow:visible }
+
+/* Micro heartbeat line */
+.hb-svg { width:70px; height:28px; overflow:visible }
+
+</style>
+</head>
+<body>
+
+<!-- BACKGROUND -->
+<div class="bg">
+  <div class="cloud c1"></div>
+  <div class="cloud c2"></div>
+  <div class="cloud c3"></div>
+  <div class="cloud c4"></div>
+  <div class="cloud c5"></div>
+  <div class="cloud c6"></div>
+  <div class="cloud c7"></div>
+  <div class="cloud c8"></div>
+  <div class="amb amb1"></div>
+  <div class="amb amb2"></div>
+</div>
+
+<!-- APP -->
+<div class="app">
+
+  <!-- TOP NAV -->
+  <nav class="topnav">
+    <div class="logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 14.5c-2.49 0-4.5-2.01-4.5-4.5S9.51 7.5 12 7.5s4.5 2.01 4.5 4.5-2.01 4.5-4.5 4.5z"/></svg>
+      </div>
+      Aura
+    </div>
+    <div class="nav-tabs">
+      <button class="tab active">Overview</button>
+      <button class="tab">Apps</button>
+      <button class="tab">Insights</button>
+    </div>
+    <div class="nav-right">
+      <div class="icon-btn">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>
+      </div>
+      <div class="icon-btn">
+        <svg viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- LEFT -->
+    <div class="left-panel">
+
+      <!-- Question card -->
+      <div class="glass-card q-card">
+        <div class="card-label">Reflect on it</div>
+        <div class="card-title">How will you make <strong>tomorrow</strong> meaningful?</div>
+        <div class="q-options">
+          <div class="q-opt selected">Plan it</div>
+          <div class="q-opt">Be open</div>
+        </div>
+      </div>
+
+      <!-- Running card -->
+      <div class="glass-card run-card">
+        <div class="card-label">Running</div>
+        <div class="run-meta">
+          <div>
+            <div class="run-dist">3.5 km</div>
+            <div class="run-unit">Today's distance</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:0.75rem;color:var(--text-mid)">32 min</div>
+            <div style="font-size:0.65rem;color:var(--text-light)">5.5 km/h</div>
+          </div>
+        </div>
+        <div class="run-map">
+          <div class="run-path">
+            <svg class="run-svg" viewBox="0 0 230 55" fill="none">
+              <defs>
+                <linearGradient id="pathGrad" x1="0" y1="0" x2="230" y2="0" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="rgba(232,146,74,0.2)"/>
+                  <stop offset="60%" stop-color="rgba(232,146,74,0.8)"/>
+                  <stop offset="100%" stop-color="rgba(232,146,74,0.3)"/>
+                </linearGradient>
+              </defs>
+              <path d="M10,35 C30,35 35,18 55,20 S80,32 100,28 S130,15 150,22 S175,35 200,30 S215,22 222,25"
+                stroke="url(#pathGrad)" stroke-width="2.5" stroke-linecap="round" fill="none">
+                <animate attributeName="stroke-dashoffset" from="500" to="0" dur="2s" fill="freeze"/>
+              </path>
+              <!-- Moving dot -->
+              <circle r="4" fill="var(--gold)" filter="url(#dot-glow)">
+                <animateMotion dur="4s" repeatCount="indefinite" path="M10,35 C30,35 35,18 55,20 S80,32 100,28 S130,15 150,22 S175,35 200,30 S215,22 222,25"/>
+              </circle>
+              <circle r="7" fill="rgba(232,146,74,0.2)">
+                <animateMotion dur="4s" repeatCount="indefinite" path="M10,35 C30,35 35,18 55,20 S80,32 100,28 S130,15 150,22 S175,35 200,30 S215,22 222,25"/>
+              </circle>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Heart Rate -->
+      <div class="glass-card hr-card">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div class="card-label">❤ Heart Rate</div>
+          <svg class="hb-svg" viewBox="0 0 70 28" fill="none">
+            <polyline points="0,14 8,14 12,5 16,22 20,8 24,18 28,14 36,14 40,10 44,18 48,12 52,16 56,14 70,14"
+              stroke="rgba(232,100,80,0.8)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <animate attributeName="stroke-dashoffset" from="200" to="0" dur="1.5s" fill="freeze"/>
+            </polyline>
+          </svg>
+        </div>
+        <div class="hr-row">
+          <div>
+            <div class="hr-num">74</div>
+            <div class="hr-unit">bpm — Resting</div>
+          </div>
+          <div class="hr-bars">
+            <div class="bar" style="height:22px;animation-delay:0s"></div>
+            <div class="bar" style="height:30px;animation-delay:0.1s"></div>
+            <div class="bar" style="height:18px;animation-delay:0.2s"></div>
+            <div class="bar" style="height:36px;animation-delay:0.3s"></div>
+            <div class="bar" style="height:24px;animation-delay:0.4s"></div>
+            <div class="bar" style="height:28px;animation-delay:0.5s"></div>
+            <div class="bar" style="height:20px;animation-delay:0.6s"></div>
+            <div class="bar" style="height:34px;animation-delay:0.7s"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Calories -->
+      <div class="glass-card cal-card">
+        <div class="card-label">🔥 Calories</div>
+        <div class="cal-val">2,054</div>
+        <div style="font-size:0.72rem;color:var(--text-light);margin-top:2px">kcal burned today</div>
+      </div>
+
+    </div>
+
+    <!-- CENTER -->
+    <div class="center-area">
+      <div class="ring-scene">
+        <div class="ring-glow-bg"></div>
+        <div class="ring-wrap">
+          <div class="ring-3d"></div>
+          <div class="ring-inner-glow"></div>
+          <div class="ring-hole-glow"></div>
+          <div class="ring-shadow"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="right-panel">
+
+      <!-- Profile -->
+      <div class="profile-ring-wrap">
+        <div class="profile-outer">
+          <div class="profile-circle">
+            <div class="profile-silhouette">
+              <div class="headband"></div>
+            </div>
+          </div>
+          <div class="profile-beacon"></div>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="glass-card stats-card">
+        <div class="card-label">Today's Stats</div>
+        <div class="stats-row">
+          <div class="stat-item">
+            <div class="stat-v">4.5</div>
+            <div class="stat-l">Score</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-v">4.4k</div>
+            <div class="stat-l">Steps</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-v">3</div>
+            <div class="stat-l">Challenges</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Arc progress -->
+      <div class="glass-card arc-card">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div>
+            <div class="card-label">Daily Goal</div>
+            <div style="font-size:1.6rem;font-weight:700;color:var(--text-dark);letter-spacing:-0.03em;margin-top:2px">12 km</div>
+            <div style="font-size:0.7rem;color:var(--text-light)">5.3 km remaining</div>
+          </div>
+          <div class="arc-wrap">
+            <svg class="arc-svg" width="80" height="80" viewBox="0 0 80 80">
+              <circle cx="40" cy="40" r="32" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="7"/>
+              <circle cx="40" cy="40" r="32" fill="none"
+                stroke="url(#arcGrad)" stroke-width="7"
+                stroke-linecap="round"
+                stroke-dasharray="201"
+                stroke-dashoffset="71"
+                transform="rotate(-90 40 40)">
+                <animate attributeName="stroke-dashoffset" from="201" to="71" dur="1.5s" ease="ease-out" fill="freeze"/>
+              </circle>
+              <defs>
+                <linearGradient id="arcGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#f5c07a"/>
+                  <stop offset="100%" stop-color="#d46020"/>
+                </linearGradient>
+              </defs>
+              <text x="40" y="44" text-anchor="middle" font-size="12" font-weight="700" font-family="Outfit" fill="#3a2828">65%</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mini chart -->
+      <div class="glass-card mini-chart-card">
+        <div class="card-label">Weekly Activity</div>
+        <div class="chart-row">
+          <div class="chart-col" style="--h:55%;height:55%"></div>
+          <div class="chart-col" style="--h:75%;height:75%"></div>
+          <div class="chart-col" style="--h:40%;height:40%"></div>
+          <div class="chart-col" style="--h:85%;height:85%"></div>
+          <div class="chart-col active" style="--h:95%;height:95%"></div>
+          <div class="chart-col" style="--h:60%;height:60%"></div>
+          <div class="chart-col" style="--h:45%;height:45%"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:6px">
+          <span style="font-size:0.62rem;color:var(--text-light)">Mon</span>
+          <span style="font-size:0.62rem;color:var(--text-light)">Tue</span>
+          <span style="font-size:0.62rem;color:var(--text-light)">Wed</span>
+          <span style="font-size:0.62rem;color:var(--text-light)">Thu</span>
+          <span style="font-size:0.62rem;color:var(--gold);font-weight:600">Fri</span>
+          <span style="font-size:0.62rem;color:var(--text-light)">Sat</span>
+          <span style="font-size:0.62rem;color:var(--text-light)">Sun</span>
+        </div>
+      </div>
+
+      <!-- Action buttons -->
+      <div class="action-btns">
+        <div class="action-btn primary">Journey</div>
+        <div class="action-btn">Lists</div>
+        <div class="action-btn">Share</div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- BOTTOM NAV -->
+  <div class="bottom-nav">
+    <div class="schedule-btn">
+      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+      Schedule
+    </div>
+    <div class="nav-icons">
+      <div class="nav-icon">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <div class="nav-icon">
+        <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </div>
+      <div class="nav-icon active">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      </div>
+      <div class="nav-icon">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <div class="nav-icon">
+        <svg viewBox="0 0 24 24"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg>
+      </div>
+    </div>
+    <div class="right-btns">
+      <div class="r-btn active">Journey</div>
+      <div class="r-btn">Lists</div>
+      <div class="r-btn">Shares</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// Interactive tab switching
+document.querySelectorAll('.tab').forEach(t => {
+  t.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+  });
+});
+
+// Interactive Q options
+document.querySelectorAll('.q-opt').forEach(o => {
+  o.addEventListener('click', () => {
+    document.querySelectorAll('.q-opt').forEach(x => x.classList.remove('selected'));
+    o.classList.add('selected');
+  });
+});
+
+// Nav icon active state
+document.querySelectorAll('.nav-icon').forEach(n => {
+  n.addEventListener('click', () => {
+    document.querySelectorAll('.nav-icon').forEach(x => x.classList.remove('active'));
+    n.classList.add('active');
+  });
+});
+
+// Right btns
+document.querySelectorAll('.r-btn').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.r-btn').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+  });
+});
+
+// Action btns
+document.querySelectorAll('.action-btn').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.action-btn').forEach(x => x.classList.remove('primary'));
+    b.classList.add('primary');
+  });
+});
+
+// Ring subtle mouse parallax
+const ring3d = document.querySelector('.ring-3d');
+const ringGlow = document.querySelector('.ring-inner-glow');
+document.addEventListener('mousemove', e => {
+  const cx = window.innerWidth / 2;
+  const cy = window.innerHeight / 2;
+  const dx = (e.clientX - cx) / cx;
+  const dy = (e.clientY - cy) / cy;
+  const tiltX = -32 + dy * 6;
+  const tiltY = 14 + dx * 6;
+  ring3d.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
+  ringGlow.style.transform = `translate(-50%,-50%) rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
+});
+</script>
+</body>
+</html>
