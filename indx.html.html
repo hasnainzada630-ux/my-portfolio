@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Alex Rivera — Creative Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #0d0d14;
+    --cream: #f5f2eb;
+    --coral: #ff4d3d;
+    --lime: #b8f000;
+    --sky: #4fc3f7;
+    --violet: #7c3aed;
+    --amber: #ffb703;
+    --white: #ffffff;
+    --font-display: 'Syne', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--ink);
+    color: var(--cream);
+    font-family: var(--font-body);
+    font-size: 17px;
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.25rem 4rem;
+    mix-blend-mode: normal;
+  }
+  nav::before {
+    content: ''; position: absolute; inset: 0;
+    background: rgba(13,13,20,0.6);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+  .nav-logo {
+    position: relative;
+    font-family: var(--font-display);
+    font-weight: 800; font-size: 1.25rem;
+    color: var(--lime);
+    letter-spacing: -0.03em;
+  }
+  .nav-links { position: relative; display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    color: rgba(245,242,235,0.6);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 400;
+    transition: color .2s;
+    letter-spacing: 0.02em;
+  }
+  .nav-links a:hover { color: var(--lime); }
+  .nav-cta {
+    position: relative;
+    background: var(--lime); color: var(--ink);
+    font-family: var(--font-body); font-weight: 500;
+    font-size: 0.88rem; border: none; cursor: pointer;
+    padding: 0.55rem 1.25rem;
+    border-radius: 100px;
+    text-decoration: none;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(184,240,0,0.35); }
+
+  /* ─── HERO ─── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: 8rem 4rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-blobs {
+    position: absolute; inset: 0; pointer-events: none;
+  }
+  .blob {
+    position: absolute; border-radius: 50%;
+    filter: blur(80px); opacity: 0.18;
+    animation: drift 10s ease-in-out infinite alternate;
+  }
+  .blob-1 { width: 520px; height: 520px; background: var(--violet); top: -100px; right: -80px; animation-duration: 12s; }
+  .blob-2 { width: 380px; height: 380px; background: var(--coral); bottom: -60px; left: 30%; animation-duration: 9s; animation-delay: -3s; }
+  .blob-3 { width: 280px; height: 280px; background: var(--sky); top: 40%; left: -40px; animation-duration: 14s; animation-delay: -5s; }
+  @keyframes drift {
+    from { transform: translate(0, 0) scale(1); }
+    to { transform: translate(30px, 20px) scale(1.08); }
+  }
+
+  .hero-left { position: relative; z-index: 2; }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 100px;
+    padding: 0.4rem 1rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--sky);
+    margin-bottom: 2rem;
+    animation: fadeUp 0.8s ease both;
+  }
+  .hero-tag span { width: 6px; height: 6px; background: var(--lime); border-radius: 50%; animation: pulse 1.5s ease infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(0.7)} }
+
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(3rem, 5.5vw, 5.5rem);
+    line-height: 1.0;
+    letter-spacing: -0.04em;
+    color: var(--cream);
+    animation: fadeUp 0.8s ease 0.1s both;
+  }
+  h1 .highlight { color: var(--coral); display: inline-block; }
+  h1 .highlight-lime { color: var(--lime); display: inline-block; }
+
+  .hero-sub {
+    margin-top: 1.75rem;
+    font-size: 1.05rem;
+    font-weight: 300;
+    color: rgba(245,242,235,0.55);
+    max-width: 38ch;
+    line-height: 1.75;
+    animation: fadeUp 0.8s ease 0.2s both;
+  }
+
+  .hero-actions {
+    margin-top: 2.5rem;
+    display: flex; align-items: center; gap: 1rem;
+    animation: fadeUp 0.8s ease 0.3s both;
+  }
+  .btn-primary {
+    background: var(--coral); color: white;
+    padding: 0.85rem 2rem;
+    border-radius: 100px;
+    font-family: var(--font-body); font-weight: 500;
+    font-size: 0.95rem; text-decoration: none;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(255,77,61,0.4); }
+  .btn-secondary {
+    color: var(--cream);
+    font-size: 0.95rem; text-decoration: none;
+    display: flex; align-items: center; gap: 6px;
+    opacity: 0.7;
+    transition: opacity .2s;
+  }
+  .btn-secondary:hover { opacity: 1; }
+  .arrow { font-size: 1.1rem; transition: transform .2s; }
+  .btn-secondary:hover .arrow { transform: translateX(4px); }
+
+  /* ─── HERO RIGHT ─── */
+  .hero-right {
+    position: relative; z-index: 2;
+    display: flex; justify-content: center; align-items: center;
+    animation: fadeUp 0.8s ease 0.4s both;
+  }
+  .avatar-wrap {
+    position: relative;
+    width: 380px; height: 420px;
+  }
+  .avatar-bg {
+    position: absolute; inset: 0;
+    border-radius: 40% 60% 55% 45% / 45% 55% 60% 40%;
+    background: linear-gradient(135deg, var(--violet) 0%, var(--coral) 100%);
+    animation: morph 8s ease-in-out infinite;
+  }
+  @keyframes morph {
+    0%,100% { border-radius: 40% 60% 55% 45% / 45% 55% 60% 40%; }
+    50% { border-radius: 60% 40% 45% 55% / 55% 45% 40% 60%; }
+  }
+  .avatar-photo {
+    position: absolute; inset: 8px;
+    border-radius: 38% 62% 53% 47% / 43% 53% 62% 42%;
+    background: #1a1a28;
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    animation: morph 8s ease-in-out infinite reverse;
+  }
+  .avatar-initials {
+    font-family: var(--font-display);
+    font-size: 5rem; font-weight: 800;
+    color: rgba(255,255,255,0.12);
+    letter-spacing: -0.06em;
+  }
+  .badge {
+    position: absolute;
+    background: var(--white);
+    border-radius: 16px;
+    padding: 0.6rem 1rem;
+    display: flex; align-items: center; gap: 8px;
+    font-size: 0.82rem; font-weight: 500;
+    color: var(--ink);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    white-space: nowrap;
+  }
+  .badge-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .badge-1 { bottom: 40px; left: -30px; animation: float 4s ease-in-out infinite; }
+  .badge-2 { top: 50px; right: -20px; animation: float 4s ease-in-out 1.5s infinite; }
+  .badge-3 { top: -10px; left: 20px; animation: float 4s ease-in-out 0.7s infinite; }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+
+  /* ─── SCROLLING TICKER ─── */
+  .ticker-wrap {
+    overflow: hidden;
+    border-top: 1px solid rgba(255,255,255,0.07);
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    background: rgba(255,255,255,0.03);
+    padding: 1rem 0;
+  }
+  .ticker {
+    display: flex; gap: 3rem;
+    animation: ticker 22s linear infinite;
+    white-space: nowrap;
+  }
+  .ticker-item {
+    display: flex; align-items: center; gap: 0.6rem;
+    font-family: var(--font-display); font-size: 0.78rem;
+    font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: rgba(245,242,235,0.4);
+    flex-shrink: 0;
+  }
+  .ticker-star { color: var(--lime); font-size: 1rem; }
+  @keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+  /* ─── SECTION COMMON ─── */
+  section { padding: 7rem 4rem; }
+  .section-tag {
+    font-size: 0.75rem; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--lime);
+    margin-bottom: 1rem;
+  }
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 800; font-size: clamp(2.2rem, 4vw, 3.5rem);
+    letter-spacing: -0.04em; line-height: 1.1;
+    color: var(--cream);
+  }
+
+  /* ─── ABOUT ─── */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+    margin-top: 4rem;
+  }
+  .about-text p {
+    color: rgba(245,242,235,0.6);
+    font-weight: 300;
+    margin-bottom: 1.25rem;
+    font-size: 1.05rem;
+  }
+  .stat-row {
+    display: flex; gap: 2rem; margin-top: 2.5rem;
+  }
+  .stat-box {
+    border-left: 3px solid var(--coral);
+    padding-left: 1rem;
+  }
+  .stat-num {
+    font-family: var(--font-display);
+    font-size: 2.5rem; font-weight: 800;
+    letter-spacing: -0.05em; color: var(--cream);
+  }
+  .stat-label {
+    font-size: 0.82rem; color: rgba(245,242,235,0.45);
+    font-weight: 300;
+  }
+  .skills-list { display: flex; flex-direction: column; gap: 1rem; }
+  .skill-item {}
+  .skill-header {
+    display: flex; justify-content: space-between;
+    font-size: 0.88rem; margin-bottom: 0.4rem;
+    color: rgba(245,242,235,0.8);
+  }
+  .skill-bar-bg {
+    height: 4px; background: rgba(255,255,255,0.08);
+    border-radius: 100px; overflow: hidden;
+  }
+  .skill-bar {
+    height: 100%; border-radius: 100px;
+    transition: width 1s ease;
+  }
+
+  /* ─── SERVICES ─── */
+  .services-section { background: rgba(255,255,255,0.02); }
+  .services-intro { max-width: 54ch; margin-bottom: 4rem; }
+  .services-intro p { color: rgba(245,242,235,0.5); font-weight: 300; margin-top: 1rem; font-size: 1.05rem; }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+  .service-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 20px;
+    padding: 2rem;
+    transition: transform .25s, border-color .25s;
+    position: relative; overflow: hidden;
+  }
+  .service-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 20px 20px 0 0;
+  }
+  .service-card:hover { transform: translateY(-6px); border-color: rgba(255,255,255,0.16); }
+  .sc-1::before { background: var(--coral); }
+  .sc-2::before { background: var(--lime); }
+  .sc-3::before { background: var(--sky); }
+  .sc-4::before { background: var(--amber); }
+  .sc-5::before { background: var(--violet); }
+  .sc-6::before { background: #ff87ab; }
+  .service-icon {
+    width: 48px; height: 48px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; margin-bottom: 1.25rem;
+  }
+  .service-card h3 {
+    font-family: var(--font-display);
+    font-size: 1.1rem; font-weight: 700;
+    color: var(--cream); margin-bottom: 0.6rem;
+    letter-spacing: -0.02em;
+  }
+  .service-card p { font-size: 0.9rem; color: rgba(245,242,235,0.45); font-weight: 300; line-height: 1.7; }
+
+  /* ─── WORK ─── */
+  .work-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3.5rem; }
+  .projects-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+  .project-card {
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    aspect-ratio: 4/3;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    transition: transform .3s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .project-card:hover { transform: scale(1.02); }
+  .project-card.big { grid-row: span 2; aspect-ratio: auto; min-height: 400px; }
+  .project-bg {
+    position: absolute; inset: 0;
+    opacity: 0.15;
+  }
+  .p1 .project-bg { background: radial-gradient(circle at 30% 50%, var(--coral), transparent 70%); }
+  .p2 .project-bg { background: radial-gradient(circle at 70% 30%, var(--sky), transparent 70%); }
+  .p3 .project-bg { background: radial-gradient(circle at 50% 60%, var(--violet), transparent 70%); }
+  .p4 .project-bg { background: radial-gradient(circle at 40% 40%, var(--lime), transparent 70%); }
+  .project-content {
+    position: relative; z-index: 2;
+    padding: 2rem; text-align: center;
+  }
+  .project-emoji { font-size: 3rem; display: block; margin-bottom: 1rem; }
+  .project-card h3 {
+    font-family: var(--font-display); font-weight: 700;
+    font-size: 1.15rem; letter-spacing: -0.02em;
+    color: var(--cream); margin-bottom: 0.4rem;
+  }
+  .project-card p { font-size: 0.82rem; color: rgba(245,242,235,0.45); }
+  .project-tag {
+    display: inline-block;
+    margin-top: 0.8rem;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 100px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(245,242,235,0.6);
+  }
+  .project-link {
+    position: absolute; top: 1rem; right: 1rem; z-index: 3;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.14);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem;
+    color: rgba(245,242,235,0.6);
+    opacity: 0; transition: opacity .2s;
+    text-decoration: none;
+  }
+  .project-card:hover .project-link { opacity: 1; }
+
+  /* ─── TESTIMONIALS ─── */
+  .testimonials { background: rgba(255,255,255,0.02); }
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 3.5rem;
+  }
+  .testi-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 20px; padding: 2rem;
+  }
+  .stars { color: var(--amber); font-size: 0.85rem; margin-bottom: 1.25rem; letter-spacing: 2px; }
+  .testi-card blockquote {
+    font-size: 0.95rem;
+    font-weight: 300;
+    color: rgba(245,242,235,0.65);
+    line-height: 1.75;
+    margin-bottom: 1.5rem;
+  }
+  .testi-author { display: flex; align-items: center; gap: 10px; }
+  .testi-avatar {
+    width: 38px; height: 38px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display); font-weight: 700; font-size: 0.75rem;
+    color: var(--ink);
+  }
+  .testi-name { font-size: 0.88rem; font-weight: 500; color: var(--cream); }
+  .testi-role { font-size: 0.78rem; color: rgba(245,242,235,0.35); }
+
+  /* ─── CTA ─── */
+  .cta-section {
+    text-align: center;
+    padding: 8rem 4rem;
+    position: relative; overflow: hidden;
+  }
+  .cta-glow {
+    position: absolute;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: var(--violet);
+    opacity: 0.12;
+    filter: blur(100px);
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    pointer-events: none;
+  }
+  .cta-section h2 {
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    position: relative; z-index: 1;
+    max-width: 14ch; margin: 0 auto 1.5rem;
+  }
+  .cta-section p {
+    position: relative; z-index: 1;
+    color: rgba(245,242,235,0.45); font-weight: 300;
+    font-size: 1.05rem; margin-bottom: 2.5rem;
+  }
+  .cta-buttons { position: relative; z-index: 1; display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+  .btn-outline {
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 100px;
+    padding: 0.85rem 2rem;
+    font-family: var(--font-body); font-weight: 400;
+    font-size: 0.95rem;
+    color: var(--cream);
+    text-decoration: none;
+    transition: border-color .2s, background .2s;
+  }
+  .btn-outline:hover { border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.05); }
+
+  /* ─── FOOTER ─── */
+  footer {
+    border-top: 1px solid rgba(255,255,255,0.07);
+    padding: 2.5rem 4rem;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .footer-logo { font-family: var(--font-display); font-weight: 800; color: var(--lime); font-size: 1.1rem; letter-spacing: -0.03em; }
+  footer p { font-size: 0.82rem; color: rgba(245,242,235,0.3); }
+  .social-links { display: flex; gap: 1rem; }
+  .social-links a {
+    width: 36px; height: 36px; border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.12);
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(245,242,235,0.45); text-decoration: none;
+    font-size: 0.85rem;
+    transition: border-color .2s, color .2s;
+  }
+  .social-links a:hover { border-color: var(--lime); color: var(--lime); }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .reveal {
+    opacity: 0; transform: translateY(32px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ─── MOBILE ─── */
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .hero { grid-template-columns: 1fr; padding: 7rem 1.5rem 3rem; }
+    .hero-right { display: none; }
+    section { padding: 5rem 1.5rem; }
+    .about-grid, .services-grid, .testimonials-grid { grid-template-columns: 1fr; }
+    .projects-grid { grid-template-columns: 1fr; }
+    .project-card.big { min-height: 260px; }
+    .work-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+    footer { flex-direction: column; gap: 1.5rem; text-align: center; padding: 2rem 1.5rem; }
+    .stat-row { gap: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">AR.</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Let's Talk →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-blobs">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+  <div class="hero-left">
+    <div class="hero-tag"><span></span> Open for new projects</div>
+    <h1>Crafting<br /><span class="highlight">Digital</span><br />Experiences<span class="highlight-lime">.</span></h1>
+    <p class="hero-sub">I'm Alex Rivera — a creative designer & developer turning bold ideas into stunning digital realities. Based in NYC, working worldwide.</p>
+    <div class="hero-actions">
+      <a href="#work" class="btn-primary">View My Work</a>
+      <a href="#about" class="btn-secondary">About Me <span class="arrow">→</span></a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="avatar-wrap">
+      <div class="avatar-bg"></div>
+      <div class="avatar-photo">
+        <span class="avatar-initials">AR</span>
+      </div>
+      <div class="badge badge-1">
+        <div class="badge-dot" style="background:#22c55e;"></div>
+        Available for work
+      </div>
+      <div class="badge badge-2">
+        ⭐ 5.0 — 48 Reviews
+      </div>
+      <div class="badge badge-3">
+        🎨 Creative Director
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker">
+    <span class="ticker-item"><span class="ticker-star">✦</span> UI / UX Design</span>
+    <span class="ticker-item"><span class="ticker-star">✦</span> Brand Identity</span>
+    <span class="ticker-item"><span class="ticker-star">✦</span> Web Development</span>
+    <span class="ticker-item"><span class="ticker-star">✦</span> Motion Design</span>
+    <span class="ticker-item"><span class="ticker-star">✦</span> Illustration</span>
+    <span class="ticker-item"><span class="ticker-star">✦</span> Product Design</span>
+    <span class="ticker-item"><span class="ticker-star">✦</span> UI / UX Design</span>
+    <span class="ticker-item"><span class="ticker-star">✦</span> Brand Identity</span>
+    <span class="ticker-item"><span class="ticker-star">✦</span> Web Development</span>
+    <span class="ticker-item"><span class="ticker-star">✦</span> Motion Design</span>
+    <span class="ticker-item"><span class="ticker-star">✦</span> Illustration</span>
+    <span class="ticker-item"><span class="ticker-star">✦</span> Product Design</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <p class="section-tag reveal">— About Me</p>
+  <h2 class="reveal">I make things<br />people <span style="color:var(--coral)">love</span></h2>
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <p>With over 6 years of experience at the intersection of design and technology, I craft digital products that aren't just beautiful — they're built to perform and convert.</p>
+      <p>I've partnered with startups, agencies, and Fortune 500 brands to ship products used by millions. My approach blends strategic thinking with pixel-perfect execution.</p>
+      <p>When I'm not designing, you'll find me mentoring young creatives, exploring type design, or hunting down the perfect espresso.</p>
+      <div class="stat-row">
+        <div class="stat-box">
+          <div class="stat-num">6+</div>
+          <div class="stat-label">Years Experience</div>
+        </div>
+        <div class="stat-box" style="border-color:var(--lime)">
+          <div class="stat-num">120+</div>
+          <div class="stat-label">Projects Delivered</div>
+        </div>
+        <div class="stat-box" style="border-color:var(--sky)">
+          <div class="stat-num">48</div>
+          <div class="stat-label">Happy Clients</div>
+        </div>
+      </div>
+    </div>
+    <div class="skills-list reveal">
+      <div class="skill-item">
+        <div class="skill-header"><span>UI / UX Design</span><span>95%</span></div>
+        <div class="skill-bar-bg"><div class="skill-bar" style="width:95%;background:var(--coral);"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-header"><span>Web Development</span><span>88%</span></div>
+        <div class="skill-bar-bg"><div class="skill-bar" style="width:88%;background:var(--lime);"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-header"><span>Brand Identity</span><span>92%</span></div>
+        <div class="skill-bar-bg"><div class="skill-bar" style="width:92%;background:var(--sky);"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-header"><span>Motion Design</span><span>80%</span></div>
+        <div class="skill-bar-bg"><div class="skill-bar" style="width:80%;background:var(--violet);"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-header"><span>Product Strategy</span><span>85%</span></div>
+        <div class="skill-bar-bg"><div class="skill-bar" style="width:85%;background:var(--amber);"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services" class="services-section">
+  <div class="services-intro">
+    <p class="section-tag reveal">— What I Do</p>
+    <h2 class="reveal">Services built<br />for impact</h2>
+    <p class="reveal">Every service is designed end-to-end — from strategy to final pixel — with craft and intention.</p>
+  </div>
+  <div class="services-grid">
+    <div class="service-card sc-1 reveal">
+      <div class="service-icon" style="background:rgba(255,77,61,0.12)">🎨</div>
+      <h3>UI / UX Design</h3>
+      <p>Intuitive interfaces and delightful user flows that make complex things feel simple and joyful.</p>
+    </div>
+    <div class="service-card sc-2 reveal">
+      <div class="service-icon" style="background:rgba(184,240,0,0.12)">💻</div>
+      <h3>Web Development</h3>
+      <p>Blazing-fast, accessible websites and web apps built with modern frameworks and clean code.</p>
+    </div>
+    <div class="service-card sc-3 reveal">
+      <div class="service-icon" style="background:rgba(79,195,247,0.12)">✦</div>
+      <h3>Brand Identity</h3>
+      <p>Logo, typography, color systems — a complete visual language that tells your brand's story.</p>
+    </div>
+    <div class="service-card sc-4 reveal">
+      <div class="service-icon" style="background:rgba(255,183,3,0.12)">🎬</div>
+      <h3>Motion Design</h3>
+      <p>Animations and micro-interactions that breathe life into your product and wow your users.</p>
+    </div>
+    <div class="service-card sc-5 reveal">
+      <div class="service-icon" style="background:rgba(124,58,237,0.12)">📐</div>
+      <h3>Product Strategy</h3>
+      <p>From wireframes to roadmaps — helping teams find clarity, direction, and confidence.</p>
+    </div>
+    <div class="service-card sc-6 reveal">
+      <div class="service-icon" style="background:rgba(255,135,171,0.12)">🖼️</div>
+      <h3>Illustration</h3>
+      <p>Custom digital illustrations and icons that make your brand unforgettable and uniquely yours.</p>
+    </div>
+  </div>
+</section>
+
+<!-- WORK -->
+<section id="work">
+  <div class="work-header reveal">
+    <div>
+      <p class="section-tag">— Selected Work</p>
+      <h2>Recent Projects</h2>
+    </div>
+    <a href="#contact" class="btn-secondary">See all work <span class="arrow">→</span></a>
+  </div>
+  <div class="projects-grid">
+    <div class="project-card p1 big reveal">
+      <div class="project-bg"></div>
+      <a href="#" class="project-link">↗</a>
+      <div class="project-content">
+        <span class="project-emoji">🛍️</span>
+        <h3>Lumi E-Commerce</h3>
+        <p>Full brand identity + Shopify store for a sustainable skincare startup</p>
+        <span class="project-tag">Brand + Web</span>
+      </div>
+    </div>
+    <div class="project-card p2 reveal">
+      <div class="project-bg"></div>
+      <a href="#" class="project-link">↗</a>
+      <div class="project-content">
+        <span class="project-emoji">📊</span>
+        <h3>Nexus Dashboard</h3>
+        <p>Analytics SaaS product redesign — 40% increase in engagement</p>
+        <span class="project-tag">UX / Product</span>
+      </div>
+    </div>
+    <div class="project-card p3 reveal">
+      <div class="project-bg"></div>
+      <a href="#" class="project-link">↗</a>
+      <div class="project-content">
+        <span class="project-emoji">🎵</span>
+        <h3>Wavvv Music App</h3>
+        <p>iOS music streaming app UI concept with motion-first design</p>
+        <span class="project-tag">UI + Motion</span>
+      </div>
+    </div>
+    <div class="project-card p4 reveal" style="grid-column: span 1;">
+      <div class="project-bg"></div>
+      <a href="#" class="project-link">↗</a>
+      <div class="project-content">
+        <span class="project-emoji">🌱</span>
+        <h3>GreenPath NGO</h3>
+        <p>Website & campaign identity for environmental nonprofit</p>
+        <span class="project-tag">Web + Brand</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials" class="testimonials">
+  <p class="section-tag reveal">— Testimonials</p>
+  <h2 class="reveal">What clients say</h2>
+  <div class="testimonials-grid">
+    <div class="testi-card reveal">
+      <div class="stars">★★★★★</div>
+      <blockquote>"Alex delivered a brand identity that completely transformed how our customers perceive us. The attention to detail and creative vision were extraordinary."</blockquote>
+      <div class="testi-author">
+        <div class="testi-avatar" style="background:var(--coral);color:#fff;">SL</div>
+        <div>
+          <div class="testi-name">Sarah Lin</div>
+          <div class="testi-role">CEO, Lumi Skincare</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card reveal">
+      <div class="stars">★★★★★</div>
+      <blockquote>"The redesign of our dashboard was flawless. Users immediately noticed the difference. Alex is the rare designer who truly understands product."</blockquote>
+      <div class="testi-author">
+        <div class="testi-avatar" style="background:var(--sky);color:#fff;">MK</div>
+        <div>
+          <div class="testi-name">Marcus K.</div>
+          <div class="testi-role">CTO, Nexus Analytics</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card reveal">
+      <div class="stars">★★★★★</div>
+      <blockquote>"Working with Alex felt like having a creative partner, not just a contractor. The work exceeded every expectation and was delivered ahead of schedule."</blockquote>
+      <div class="testi-author">
+        <div class="testi-avatar" style="background:var(--lime);color:var(--ink);">JP</div>
+        <div>
+          <div class="testi-name">Jana P.</div>
+          <div class="testi-role">Director, GreenPath NGO</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="contact" class="cta-section">
+  <div class="cta-glow"></div>
+  <p class="section-tag reveal" style="margin-bottom:1.5rem;">— Let's Collaborate</p>
+  <h2 class="reveal">Got a project<br />in mind<span style="color:var(--coral)">?</span></h2>
+  <p class="reveal">I'm currently taking on new projects for Q3 2025.<br/>Let's build something brilliant together.</p>
+  <div class="cta-buttons reveal">
+    <a href="mailto:hello@alexrivera.co" class="btn-primary">Send Me a Message</a>
+    <a href="#work" class="btn-outline">View Portfolio</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">AR.</div>
+  <p>© 2025 Alex Rivera. All rights reserved.</p>
+  <div class="social-links">
+    <a href="#" title="Twitter">𝕏</a>
+    <a href="#" title="LinkedIn">in</a>
+    <a href="#" title="Dribbble">🏀</a>
+    <a href="#" title="GitHub">⌥</a>
+  </div>
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+
+  window.addEventListener('scroll', () => {
+    const nav = document.querySelector('nav');
+    nav.style.background = window.scrollY > 50 ? 'rgba(13,13,20,0.85)' : '';
+  });
+</script>
+</body>
+</html>
